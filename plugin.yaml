@@ -1,0 +1,38 @@
+plugins:
+  cfy_monitoring:
+    executor: central_deployment_agent
+    package_name: 'cloudify-web-monitoring-plugin'
+    package_version: '1.0'
+
+node_types:
+  cloudify.nodes.monitoring.Monitor:
+    derived_from: cloudify.nodes.Root
+    properties:
+      deployment_id:
+        type: string
+      scalable_entity_name:
+        type: string
+      client:
+        required: false
+        type: dict
+      delta:
+        type: integer
+      url:
+        type: string
+      low_threshold:
+        type: integer
+      high_threshold:
+        type: integer
+      scaleup_cooldown:
+        type: integer
+      scaledown_cooldown:
+        type: integer
+      interval:
+        type: integer
+      scaleout_limit:
+        type: integer
+        default: 1
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        start:
+          implementation: cfy_monitoring.plugin.tasks.check_and_schedule
