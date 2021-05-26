@@ -6,6 +6,8 @@ cloudify-web-monitoring-plugin
 
 A Cloudify Plugin that monitor a URL response time and based on metrics will trigger scale up or down
 
+Basic contifuration includes what to monitor (URL), thresholds, limits and how to perform the scaling. Please see node type description below for details
+
 ## Node types
 
 ### cloudify.nodes.monitoring.Monitor - implements monitoring logic
