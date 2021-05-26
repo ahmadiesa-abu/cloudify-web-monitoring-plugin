@@ -38,11 +38,18 @@
                 "description": "The version of Kubernetes."
             }
         },
+        "agentPoolName": {
+            "type": "string",
+            "defaultValue": "agentpool",
+            "metadata": {
+                "description": "Agent pool name."
+            }
+        },
         "count": {
             "type": "int",
             "defaultValue": 5,
             "metadata": {
-                "description": "The version of Kubernetes."
+                "description": "Agent pool node count."
             }
         },
         "networkPlugin": {
@@ -149,7 +156,7 @@
                 "dnsPrefix": "[parameters('dnsPrefix')]",
                 "agentPoolProfiles": [
                     {
-                        "name": "agentpool",
+                        "name": "[parameters('agentPoolName')]",
                         "osDiskSizeGB": "[parameters('osDiskSizeGB')]",
                         "count": "[parameters('count')]",
                         "vmSize": "Standard_DS2_v2",

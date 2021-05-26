@@ -4,6 +4,64 @@ imports:
   - http://cloudify.co/spec/cloudify/5.0.0/types.yaml
   - plugin:cloudify-azure-plugin
 
+
+node_types:
+  node_agent_pool_scaler:
+    derived_from: cloudify.nodes.Root
+    properties:
+      azure_config:
+        default: {}
+      resource_group_name:
+        type: string
+      cluster_name:
+        type: string
+      agent_pool_name:
+        type: string
+    interfaces:
+      cloudify.interfaces.lifecycle:
+        create:
+          implementation: scripts/get_agent_pool.py
+          executor: central_deployment_agent
+          inputs:
+            azure_config:
+              default: { get_property: [ SELF, azure_config ] }
+            resource_group_name:
+              default: { get_property: [ SELF, resource_group_name ] }
+            cluster_name:
+              default: { get_property: [ SELF, cluster_name ] }
+            agent_pool_name:
+              default: { get_property: [ SELF, agent_pool_name ] }
+      scale_nodes:
+        scale_up:
+          implementation: scripts/scale_nodes.py
+          executor: central_deployment_agent
+          inputs:
+            azure_config:
+              default: { get_property: [ SELF, azure_config ] }
+            resource_group_name:
+              default: { get_property: [ SELF, resource_group_name ] }
+            cluster_name:
+              default: { get_property: [ SELF, cluster_name ] }
+            agent_pool_name:
+              default: { get_property: [ SELF, agent_pool_name ] }
+            delta:
+              default: 1
+        scale_down:
+          implementation: scripts/scale_nodes.py
+          executor: central_deployment_agent
+          inputs:
+            azure_config:
+              default: { get_property: [ SELF, azure_config ] }
+            resource_group_name:
+              default: { get_property: [ SELF, resource_group_name ] }
+            cluster_name:
+              default: { get_property: [ SELF, cluster_name ] }
+            agent_pool_name:
+              default: { get_property: [ SELF, agent_pool_name ] }
+            delta:
+              default: -1
+
+
 inputs:
 
   azure_config:
@@ -41,13 +99,17 @@ inputs:
   template:
     default: 'templates/cluster.json'
 
+  agent_pool_name:
+    type: string
+    default: 'agentpool'
+
   node_pool_size:
     type: integer
     default: 1
 
 node_templates:
 
-  deployment:
+  aks_deployment:
     type: cloudify.azure.Deployment
     properties:
       azure_config: { get_input: azure_config }
@@ -65,8 +127,20 @@ node_templates:
         enableHttpApplicationRouting: false
         enableAzurePolicy: false
         vmssNodePool: true
+        agentPoolName: { get_input: agent_pool_name }
         count: { get_input: node_pool_size }
         workspaceName: DefaultWorkspace-937eb75f-e9d8-40e7-b7b7-ff1bd75f3d88-EUS
         omsWorkspaceId: '/subscriptions/937eb75f-e9d8-40e7-b7b7-ff1bd75f3d88/resourcegroups/defaultresourcegroup-eus/providers/microsoft.operationalinsights/workspaces/defaultworkspace-937eb75f-e9d8-40e7-b7b7-ff1bd75f3d88-eus'
         workspaceRegion: eastus
       template_file: { get_input: template }
+
+  node_agent_pool:
+    type: node_agent_pool_scaler
+    properties:
+      azure_config: { get_input: azure_config }
+      resource_group_name: { get_input: resource_group_name }
+      cluster_name: { get_input: cluster_name }
+      agent_pool_name: { get_input: agent_pool_name }
+    relationships:
+      - type: cloudify.relationships.depends_on
+        target: aks_deployment

@@ -21,6 +21,15 @@ or you can use Cloudify wagon builder Docker images
 docker run -v {path_to_plugin}/:/packaging cloudifyplatform/cloudify-centos-7-py3-wagon-builder
 ```
 
+
+## Installing the plugin
+
+In order to upload the plugin you can do that through Cloudify console or through cli
+
+```
+cfy plugin upload -y plugin.yaml cloudify_web_monitoring_plugin-1.0-centos-Core-py27.py36-none-linux_x86_64.wgn
+```
+
 ## Example
 
 check blueprints sub-directory for the example
