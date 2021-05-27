@@ -26,7 +26,7 @@ setup(
     version='1.0',
     author='Cloudify-PS',
     author_email='contact@cloudify.co',
-    description='Monitor we resources',
+    description='Monitor web resources',
 
     # This must correspond to the actual packages in the plugin.
     packages=['plugin'],
@@ -35,11 +35,11 @@ setup(
     zip_safe=False,
     install_requires=[
         # Necessary dependency for developing plugins, do not remove!
-        "cloudify-common==5.1.2",
+        "cloudify-common>=5.1.2",
         "requests"
     ],
     test_requires=[
-        "cloudify-common==5.1.2",
+        "cloudify-common>=5.1.2",
         "nose"
     ]
 )

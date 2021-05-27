@@ -372,7 +372,7 @@ node_templates:
 capabilities:
 
   flask_app_endpoint:
-    value: { concat: [ 'http://', {get_attribute: [flask_app_url, kubernetes, status, load_balancer, ingress, 0, ip]} }
+    value: { concat: [ 'http://', {get_attribute: [flask_app_url, kubernetes, status, load_balancer, ingress, 0, ip]}] }
 
   scalable_entity_name:
     value: 'node_agent_pool'
@@ -380,7 +380,7 @@ capabilities:
 outputs:
 
   flask_app_endpoint:
-    value: { concat: [ 'http://', {get_attribute: [flask_app_url, kubernetes, status, load_balancer, ingress, 0, ip]} }
+    value: { concat: [ 'http://', {get_attribute: [flask_app_url, kubernetes, status, load_balancer, ingress, 0, ip]}] }
 
   scalable_entity_name:
     value: 'node_agent_pool'

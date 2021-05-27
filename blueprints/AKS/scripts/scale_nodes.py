@@ -1,12 +1,18 @@
+import sys
+PY2 = sys.version_info[0] == 2
+
 import copy
 import time
 import json
-import httplib
 import requests
 
 from cloudify import ctx
 from cloudify.state import ctx_parameters as inputs
 
+if PY2:
+    import httplib
+else:
+    import http.client as httplib
 
 def authorize_with_azure():
 

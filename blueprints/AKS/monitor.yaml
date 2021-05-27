@@ -33,4 +33,4 @@ node_templates:
       interval: 1
     relationships:
       - type: cloudify.relationships.depends_on
-        target: node_agent_pool
+        target: cluster_deployment
